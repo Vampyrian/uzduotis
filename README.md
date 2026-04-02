@@ -1,9 +1,16 @@
 # Task
 
-## Instruction to run project
-- Install composer
-- Run composer install
-- Run php server
+## dependencies
+- composer
+- php 8.5
+
+
+
+
+## To install dependencies
+```bash
+composer install
+```
 
 
 ## To start server
