@@ -1,21 +1,14 @@
 # Task
 
-## dependencies
-- composer
-- php 8.5
-
-
-
-
-## To install dependencies
-```bash
-composer install
-```
+## Instruction to run project
+- Install composer
+- Run composer install
+- Run php server
 
 
 ## To start server
 ```bash
-symfony server:start
+php index.php
 ```
 ![Result](doc/images/result.png)
 

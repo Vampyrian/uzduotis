@@ -2,47 +2,44 @@
 
 declare(strict_types=1);
 
-namespace App\Controller;
+namespace App;
 
 use App\Collection\Collection;
 use App\Service\Converter\Rot13Converter;
 use App\Service\Converter\StringConverter;
 use App\Service\Generator\RandomStringArrayGenerator;
 use App\Service\Generator\RandomStringGenerator;
-use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Routing\Attribute\Route;
 
-class DefaultController
+class Application
 {
-    public function __construct()
-    {
+    public function __construct(
+        private readonly RandomStringGenerator $stringGenerator,
+        private readonly RandomStringArrayGenerator $arrayGenerator,
+        private readonly StringConverter $stringConverter,
+        private readonly Rot13Converter $rot13Converter
+    ) {
     }
 
-    #[Route('/', name: 'index')]
-    public function index(
-        RandomStringArrayGenerator $randomStringArrayGenerator,
-        RandomStringGenerator $randomStringGenerator,
-        StringConverter $stringConverter,
-        Rot13Converter $rot13Converter
-    ): Response {
+    public function run(): void
+    {
         $randomGeneratorCollection = new Collection();
-        $randomGeneratorCollection->add($randomStringGenerator);
-        $randomGeneratorCollection->add($randomStringArrayGenerator);
+        $randomGeneratorCollection->add($this->stringGenerator);
+        $randomGeneratorCollection->add($this->arrayGenerator);
 
         $randomConverterCollection = new Collection();
-        $randomConverterCollection->add($rot13Converter);
-        $randomConverterCollection->add($stringConverter);
-
+        $randomConverterCollection->add($this->rot13Converter);
+        $randomConverterCollection->add($this->stringConverter);
 
         $lines = [];
-        $lines[] = 'Start';
+
+        $lines[] = '-------------';
+        $lines[] = 'Start exercise:';
         $lines[] = '-------------';
         $lines[] = '';
 
         foreach ($randomGeneratorCollection->all() as $index => $generator) {
             $lines[] = ($index + 1) . ') Case';
             $lines[] = '-------------';
-
 
             $lines[] = 'Used generator: ' . get_class($generator);
             $item = $generator->generate();
@@ -65,8 +62,6 @@ class DefaultController
 
         $lines[] = '---FINISH---';
 
-        return new Response(
-            '<pre>' . implode("\n", $lines) . '</pre>'
-        );
+        echo implode("\n", $lines);
     }
 }
